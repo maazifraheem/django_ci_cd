@@ -23,4 +23,19 @@ pipeline {
             steps {
                 sh "coverage run app/manage.py test"
                 sh "coverage xml -o coverage.xml"
-     
+            }
+        }
+        stage('Publish Cobertura Coverage Report') {
+            steps {
+                cobertura coberturaReportFile: 'coverage.xml'
+        }
+        post {
+                success {
+                    // Add your webhook here to trigger actions upon successful build
+                    sh "curl -X POST https://github.com/maazifraheem/django_ci_cd"
+                }
+            }
+    }
+    }
+}
+
